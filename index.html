@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="modal" style="display: none;">
+        <div class="modal__title">Новая заметка</div>
+        <textarea class="modal__input" name="modal-input" placeholder="Введите текст"></textarea>
+        <div class="modal__button-container">
+            <input class="modal__button modal__button--cancel" type="button" value="Отмена">
+            <input class="modal__button modal__button--save" type="button" value="Сохранить">
+        </div>
+    </div>
+
+    <div class="block-interface" style="display: none;"></div>
+
+    <div class="context-menu" style="display: none;">
+        <input class="context-menu__button context-menu__button--edit" type="button" value="Редактировать">
+        <input class="context-menu__button context-menu__button--remove" type="button" value="Удалить">
+    </div>
+
+    <div class="todo-list">
+        <div class="todo-list__inner">
+            <div class="day">
+                <div class="day__date">25 января</div>
+                <ul class="list">
+                    <li class="list-item list-item--add">
+                        <div class="list-item__text">добавить</div>
+                    </li>
+                </ul>
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <script src="index.js"></script>
+</body>
+</html>
