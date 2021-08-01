@@ -1,9 +1,10 @@
 "use strict"
 
-let amountOfLi = 0;
+let amountOfLi = 1; //хорошо бы автоматизировать вычисление количества li
 let todoList = document.getElementsByClassName('todo-list')[0];
 
-let addingElem = document.getElementsByClassName('list-item--add')[0];
+let addingElem = document.getElementsByClassName('day__add-btn')[0];
+let list = document.getElementsByClassName('list')[0];
 let modal = document.getElementsByClassName('modal')[0];
 addingElem.onclick = function() {
     let newLi = document.createElement('li');
@@ -13,14 +14,13 @@ addingElem.onclick = function() {
     newText.className = 'list-item__text';
     // newText.textContent = modalTextArea.value;
 
-    let newCheckbox = document.createElement('div');
+    let newCheckbox = document.createElement('label');
     newCheckbox.className = 'checkbox';
-    let newCheckboxLabel = document.createElement('label');
-    newCheckboxLabel.setAttribute('for', `checkbox_${amountOfLi}`);
     let newCheckboxInput = document.createElement('input');
     newCheckboxInput.setAttribute('type', 'checkbox');
     newCheckboxInput.id = `checkbox_${amountOfLi}`;
-
+    let newCheckboxSpan = document.createElement('span');
+   
     newCheckboxInput.onclick = function() {
         if (newCheckboxInput.checked) {
             newLi.classList.add('list-item--done');
@@ -36,11 +36,11 @@ addingElem.onclick = function() {
     .then( (editedText) => {
         if (editedText) {
         
-            addingElem.before(newLi);
+            list.append(newLi);
             newLi.append(newText);
             newLi.append(newCheckbox);
-            newCheckbox.append(newCheckboxLabel);
-            newCheckboxLabel.append(newCheckboxInput);
+            newCheckbox.append(newCheckboxInput);
+            newCheckbox.append(newCheckboxSpan);
     
             amountOfLi++;
         }
@@ -57,8 +57,7 @@ let contextMenu = document.getElementsByClassName('context-menu')[0];
 todoList.oncontextmenu = listItemRightClickHandler;
 
 function listItemRightClickHandler(clickEvent) {
-    // if(clickEvent.which != 3) return;
-    if(!clickEvent.target.closest('.list-item') || clickEvent.target.closest('.list-item--add')) return false;
+    if(!clickEvent.target.closest('.list-item')) return false;
 
     contextMenu.style.display = 'block';
     contextMenu.style.top = clickEvent.clientY + 'px';
@@ -90,7 +89,6 @@ document.addEventListener('click', function(event) {
 })
 
 document.addEventListener('contextmenu', function(event) {
-    if (event.target.closest('.list-item--add')) contextMenu.style.display = 'none';
     if (event.target.closest('.list-item')) return;
     contextMenu.style.display = 'none';
 })
@@ -115,10 +113,6 @@ async function editTextOfItem(textDiv) {
             editedText = modalTextArea.value
             textDiv.textContent = editedText;
     
-            res();
-        }
-    
-        blocker.onclick = function() {
             res();
         }
 
