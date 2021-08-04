@@ -128,3 +128,83 @@ async function editTextOfItem(textDiv) {
     return editedText;
     
 }
+
+
+/* wrapping */
+// let day = document.getElementsByClassName('day')[0];
+// let dayWidth = parseInt(window.getComputedStyle(day).width);
+// console.log('dayw', dayWidth)
+
+
+// let body = document.querySelector('body');
+// let bodyMargins = parseInt(window.getComputedStyle(body).marginRight) + parseInt(window.getComputedStyle(body).marginLeft);
+
+// let todoListPaddings = parseInt(window.getComputedStyle(todoList).paddingRight) + parseInt(window.getComputedStyle(todoList).paddingLeft);
+
+// let windowWidth = document.documentElement.clientWidth - bodyMargins - todoListPaddings;
+// let daysInRow = Math.trunc( windowWidth/dayWidth );
+// console.log(daysInRow)
+
+
+// let days = document.getElementsByClassName('day');
+// for (let i = 0; i < days.length; i++) {
+//     if (i < daysInRow) {
+//         days[i].classList.add('day--without-padding-top');
+//     }
+//     else {
+//         days[i].classList.remove('day--without-padding-top');
+//     }
+
+//     if ( (i + 1) % daysInRow != 0 ) {
+//         days[i].classList.remove('day--last');
+//         continue;
+//     };
+
+//     days[i].classList.add('day--last');
+// }
+
+let recomposeDays = function() {
+    let day = document.getElementsByClassName('day')[0];
+    let dayWidth = parseInt(window.getComputedStyle(day).width);
+    console.log('dayw', dayWidth)
+
+
+    let body = document.querySelector('body');
+    let bodyMargins = parseInt(window.getComputedStyle(body).marginRight) + parseInt(window.getComputedStyle(body).marginLeft);
+
+    let todoListPaddings = parseInt(window.getComputedStyle(todoList).paddingRight) + parseInt(window.getComputedStyle(todoList).paddingLeft);
+    console.log('todo padd', todoListPaddings);
+
+    let lastDayInRowPadding = parseInt(window.getComputedStyle(day).paddingRight);
+    console.log(lastDayInRowPadding)
+
+    let windowWidth = document.documentElement.clientWidth - bodyMargins - todoListPaddings + lastDayInRowPadding;
+    console.log('win wid', windowWidth);
+    let daysInRow = Math.trunc( windowWidth/dayWidth );
+    console.log(daysInRow)
+
+
+    let days = document.getElementsByClassName('day');
+    for (let i = 0; i < days.length; i++) {
+        days[i].classList.remove('day--without-padding-top');
+        days[i].classList.remove('day--last');
+        days[i].classList.remove('day--in-column');
+
+        if (i < daysInRow) {
+            days[i].classList.add('day--without-padding-top');
+        }
+
+        if (daysInRow == 1) {
+            days[i].classList.add('day--in-column');
+            continue;
+        }
+
+        if ( (i + 1) % daysInRow == 0) {
+            days[i].classList.add('day--last');
+        }
+        
+    }
+}
+
+window.addEventListener('resize', recomposeDays);
+
