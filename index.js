@@ -3,7 +3,7 @@
 let amountOfLi = 1; //хорошо бы автоматизировать вычисление количества li
 let todoList = document.getElementsByClassName('todo-list')[0];
 
-let addingElem = document.getElementsByClassName('day__add-btn')[0];
+let addingElem = document.getElementsByClassName('day__add-task-btn')[0];
 let list = document.getElementsByClassName('list')[0];
 let modal = document.getElementsByClassName('modal')[0];
 addingElem.onclick = function() {
@@ -164,10 +164,11 @@ async function editTextOfItem(textDiv) {
 // }
 
 let recomposeDays = function() {
+    let days = document.getElementsByClassName('day');
+
     let day = document.getElementsByClassName('day')[0];
     let dayWidth = parseInt(window.getComputedStyle(day).width);
     console.log('dayw', dayWidth)
-
 
     let body = document.querySelector('body');
     let bodyMargins = parseInt(window.getComputedStyle(body).marginRight) + parseInt(window.getComputedStyle(body).marginLeft);
@@ -182,16 +183,20 @@ let recomposeDays = function() {
     console.log('win wid', windowWidth);
     let daysInRow = Math.trunc( windowWidth/dayWidth );
     console.log(daysInRow)
+    let daysInLastRow = days.length % daysInRow;
 
-
-    let days = document.getElementsByClassName('day');
     for (let i = 0; i < days.length; i++) {
-        days[i].classList.remove('day--without-padding-top');
-        days[i].classList.remove('day--last');
+        // days[i].classList.remove('day--without-padding-top');
+        days[i].classList.remove('day--last-in-row');
         days[i].classList.remove('day--in-column');
+        days[i].classList.remove('day--last-row');
 
-        if (i < daysInRow) {
-            days[i].classList.add('day--without-padding-top');
+        // if (i < daysInRow) {
+        //     days[i].classList.add('day--without-padding-top');
+        // }
+
+        if (days.length - i <= daysInLastRow && daysInLastRow != 0) {
+            days[i].classList.add('day--last-row');
         }
 
         if (daysInRow == 1) {
@@ -200,11 +205,20 @@ let recomposeDays = function() {
         }
 
         if ( (i + 1) % daysInRow == 0) {
-            days[i].classList.add('day--last');
+            days[i].classList.add('day--last-in-row');
         }
         
     }
+
+    if (daysInLastRow == 0) {
+        for (let i = days.length - 1; i >= days.length - daysInRow; i--) {
+            days[i].classList.add('day--last-row');
+        }
+    }
+
+    
 }
 
 window.addEventListener('resize', recomposeDays);
+window.addEventListener('load', recomposeDays);
 

@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+body {
+    margin: 8px;
+}
+
 .block-interface {
     position: fixed;
     width: 120%;
@@ -20,33 +24,65 @@
     padding: 20px;
     border-radius: 10px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
-.day-container {
+.todo-list__add-block-btn {
+    font-family: inherit;
+    width: 100%;
+    border: none;
+
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(37, 150, 255);
+    height: 40px;
+}
+
+.todo-list__add-block-btn:hover {
+    background-color: rgb(58, 160, 255);
+}
+
+.todo-list__add-block-btn:active {
+    background-color: rgb(54, 148, 236);
+}
+
+.todo-list__add-block-btn--upper {
+    border-radius: 10px 10px 0 0;
+}
+
+.todo-list__add-block-btn--down {
+    border-radius: 0 0 10px 10px;
+}
+
+.todo-list__day-container {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 auto;
 }
 
 .day {
     width: 100%;
-    width: 400px;
+    width: 420px;
     padding: 15px 20px 15px 0;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid rgb(73, 167, 255);;
 }
 
 .day--without-padding-top {
     padding-top: 0;
 }
 
-.day--last {
+.day--last-in-row {
     padding-right: 0;
-    width: 380px; /* day width 400px minus padding-right 20px */
+    width: 400px; /* day width 400px minus padding-right 20px */
 }
 
 .day--in-column {
     padding-right: 0;
     width: 400px;
+}
+
+.day--last-row {
+    border-bottom: 0;
 }
 
 .day__inner {
@@ -88,7 +124,7 @@
     text-decoration: line-through;
 }
 
-.day__add-btn {
+.day__add-task-btn {
     width: 100%;
     border: none;
     font: inherit;
@@ -99,16 +135,16 @@
     text-align: center;
 }
 
-.day__add-btn:hover {
+.day__add-task-btn:hover {
     background-color: #eaf5ff;
 }
 
-.day__add-btn:active {
+.day__add-task-btn:active {
     background-color: #d5e9fc;
     box-shadow: inset 0px 0px 35px -15px rgba(0, 0, 0, 0.26);
 }
 
-.day__add-btn:focus {
+.day__add-task-btn:focus {
     outline: none;
     box-shadow: 0 0 0 0.3rem rgba(0, 123, 255, 0.4);
 }
@@ -251,30 +287,59 @@
     border-color: #f1f1f1;
   }
   
-  /* active */
-  .checkbox>input:not(:disabled):active+span::before {
+/* active */
+.checkbox>input:not(:disabled):active+span::before {
     background-color: #b3d7ff;
     border-color: #b3d7ff;
-  }
-  
-  /* focus */
-  .checkbox>input:focus+span::before {
+}
+
+/* focus */
+.checkbox>input:focus+span::before {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-  
-  /* focus && not checked */
-  .checkbox>input:focus:not(:checked)+span::before {
+}
+
+/* focus && not checked */
+.checkbox>input:focus:not(:checked)+span::before {
     border-color: #80bdff;
-  }
-  
-  /* checked */
-  .checkbox>input:checked+span::before {
+}
+
+/* checked */
+.checkbox>input:checked+span::before {
     border-color: #0b76ef;
     background-color: #0b76ef;
     background-image: url("./svg/check-mark.svg");
-  }
-  
-  /* disabled */
-  .checkbox>input:disabled+span::before {
+}
+
+/* disabled */
+.checkbox>input:disabled+span::before {
     background-color: #e9ecef;
-  }
+}
+
+/* media queries */
+/* wider than 4 days: */
+@media (min-width: 1716px) { /* 4 days + 2 body margins + 2 todo paddings */
+    .todo-list__day-container {
+        max-width: 1660px;
+    }
+}
+
+/* narrower than 4 days (3 days in a row): */
+@media (max-width: 1716px) { /* 4 days + 2 body margins + 2 todo paddings */
+    .todo-list__day-container {
+        max-width: 1240px;
+    }
+}
+
+/* narrower than 3 days (2 days in a row): */
+@media (max-width: 1288px) { /* 3 days + 2 body margins + 2 todo paddings */
+    .todo-list__day-container {
+        max-width: 820px;
+    }
+}
+
+/* narrower than 2 days (column of days): */
+@media (max-width: 876px) { /* 2 days + 2 body margins + 2 todo paddings */
+    .todo-list__day-container {
+        max-width: 420px;
+    }
+}
