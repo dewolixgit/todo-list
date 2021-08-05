@@ -3,10 +3,13 @@
 let amountOfLi = 1; //хорошо бы автоматизировать вычисление количества li
 let todoList = document.getElementsByClassName('todo-list')[0];
 
-let addingElem = document.getElementsByClassName('day__add-task-btn')[0];
+let addingTaskBtn = document.getElementsByClassName('day__add-task-btn')[0];
 let list = document.getElementsByClassName('list')[0];
 let modal = document.getElementsByClassName('modal')[0];
-addingElem.onclick = function() {
+addingTaskBtn.onclick = createTask;
+
+
+function createTask(clickEvent) {
     let newLi = document.createElement('li');
     newLi.className = 'list-item';
 
@@ -36,7 +39,7 @@ addingElem.onclick = function() {
     .then( (editedText) => {
         if (editedText) {
         
-            list.append(newLi);
+            clickEvent.target.closest('.day').getElementsByClassName('list')[0].append(newLi);
             newLi.append(newText);
             newLi.append(newCheckbox);
             newCheckbox.append(newCheckboxInput);
@@ -49,6 +52,45 @@ addingElem.onclick = function() {
 }
 
 
+let dayContainer = document.getElementsByClassName('todo-list__day-container')[0];
+let addingBlockBtnPrepend = document.getElementsByClassName('todo-list__add-block-btn--upper')[0];
+let addingBlockBtnAppend = document.getElementsByClassName('todo-list__add-block-btn--down')[0];
+
+let createBlock = function(clickEvent) {
+
+    let newDay = document.createElement('div');
+    newDay.className = 'day';
+
+    let newDayInner = document.createElement('div');
+    newDayInner.className = 'day__inner';
+
+    let newDayDate = document.createElement('div');
+    newDayDate.className = 'day__date';
+    newDayDate.textContent = new Date;
+
+    let newList = document.createElement('ul');
+    newList.className = 'list';
+
+    let newBtn = document.createElement('button');
+    newBtn.textContent = 'Добавить';
+    newBtn.className = 'day__add-task-btn';
+
+    newBtn.onclick = createTask;
+   
+    newDay.append(newDayInner);
+    newDayInner.append(newDayDate);
+    newDayInner.append(newList);
+    newDayInner.append(newBtn);
+
+    if (clickEvent.target.closest('.todo-list__add-block-btn--upper')) dayContainer.prepend(newDay);
+    else if (clickEvent.target.closest('.todo-list__add-block-btn--down')) dayContainer.append(newDay);
+    else console.log('err'); // как обработать ошибку
+
+    recomposeDays();
+
+}
+
+addingBlockBtnPrepend.onclick = createBlock;
 
 
 
