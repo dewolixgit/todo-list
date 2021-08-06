@@ -324,14 +324,14 @@ body {
 }
 
 /* narrower than 4 days (3 days in a row): */
-@media (max-width: 1716px) { /* 4 days + 2 body margins + 2 todo paddings */
+@media (max-width: 1715px) { /* 4 days + 2 body margins + 2 todo paddings - 1px */
     .todo-list__day-container {
         max-width: 1240px;
     }
 }
 
 /* narrower than 3 days (2 days in a row): */
-@media (max-width: 1288px) { /* 3 days + 2 body margins + 2 todo paddings */
+@media (max-width: 1296px) { /* 3 days + 2 body margins + 2 todo paddings */
     .todo-list__day-container {
         max-width: 820px;
     }

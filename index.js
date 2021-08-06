@@ -67,6 +67,7 @@ let createBlock = function(clickEvent) {
     let newDayDate = document.createElement('div');
     newDayDate.className = 'day__date';
     newDayDate.textContent = new Date;
+    newDayDate.onclick = titleEditing;
 
     let newList = document.createElement('ul');
     newList.className = 'list';
@@ -91,6 +92,50 @@ let createBlock = function(clickEvent) {
 }
 
 addingBlockBtnPrepend.onclick = createBlock;
+
+let titleEditingMenu = document.getElementsByClassName('title-editing-menu')[0];
+let titleEditingMenuCancelBtn = document.getElementsByClassName('title-editing-menu__button--cancel')[0];
+let titleEditingMenuOkBtn = document.getElementsByClassName('title-editing-menu__button--ok')[0];
+
+function titleEditing(clickEvent) {
+    let titleDiv = clickEvent.target.closest('.day__date');
+    console.log(titleDiv)
+
+    let titleWidth = parseInt(window.getComputedStyle(titleDiv).width);
+    let titleHeight = parseInt(window.getComputedStyle(titleDiv).height);
+    let titleText = titleDiv.textContent;
+
+    let inputArea = document.createElement('input');
+    inputArea.setAttribute('type', 'text');
+    inputArea.style.width = titleWidth;
+    inputArea.style.height = titleHeight;
+    inputArea.value = titleText;
+
+    let titleEditingContainer = document.createElement('div');
+    titleEditingContainer.className = 'title-editing-container';
+
+    titleDiv.replaceWith(titleEditingContainer);
+    titleEditingContainer.append(inputArea);
+    titleEditingContainer.append(titleEditingMenu);
+    titleEditingMenu.style.display = 'block';
+
+    titleEditingMenuCancelBtn.onclick = function() {
+        body.append(title.titleEditingMenu);
+        titleEditingMenu.style.display = 'none';
+        titleEditingContainer.replaceWith(titleDiv);
+    }
+
+    titleEditingMenuOkBtn.onclick = function() {
+        titleDiv.textContent = inputArea.value;
+
+        document.getElementsByTagName('body')[0].append(titleEditingMenu);
+        titleEditingMenu.style.display = 'none';
+        titleEditingContainer.replaceWith(titleDiv);
+    }
+
+
+
+}
 
 
 
@@ -205,6 +250,7 @@ async function editTextOfItem(textDiv) {
 //     days[i].classList.add('day--last');
 // }
 
+const maxDaysInRow = 4;
 let recomposeDays = function() {
     let days = document.getElementsByClassName('day');
 
@@ -224,6 +270,7 @@ let recomposeDays = function() {
     let windowWidth = document.documentElement.clientWidth - bodyMargins - todoListPaddings + lastDayInRowPadding;
     console.log('win wid', windowWidth);
     let daysInRow = Math.trunc( windowWidth/dayWidth );
+    daysInRow = (daysInRow >= maxDaysInRow) ? maxDaysInRow : daysInRow;
     console.log(daysInRow)
     let daysInLastRow = days.length % daysInRow;
 
