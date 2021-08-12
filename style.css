@@ -91,7 +91,7 @@ body {
     border-radius: 10px;
 }
 
-.day__date {
+.day__title {
     background-color: #d5e9fc;
     padding: 10px;
     border-radius: 10px 10px 0 0;
@@ -245,6 +245,31 @@ body {
     display: block;
     width: 90%;
     margin: 5px auto;
+}
+
+
+/* title editing */
+.title-editing-container {
+    position: relative;
+}
+
+.title-editing-input {
+    width: 370px; /* content + paddings of day__title */
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    border: 0;
+    background-color: #d5e9fc;
+    font-family: inherit;
+    font-size: 16px;
+    text-align: center;
+}
+
+.title-editing-input:focus {
+    outline: none;
+}
+
+.title-editing-menu {
+    position: absolute;
 }
 
 

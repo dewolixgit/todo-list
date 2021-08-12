@@ -64,10 +64,10 @@ let createBlock = function(clickEvent) {
     let newDayInner = document.createElement('div');
     newDayInner.className = 'day__inner';
 
-    let newDayDate = document.createElement('div');
-    newDayDate.className = 'day__date';
-    newDayDate.textContent = new Date;
-    newDayDate.onclick = titleEditing;
+    let newDayTitle = document.createElement('div');
+    newDayTitle.className = 'day__title';
+    newDayTitle.textContent = new Date;
+    newDayTitle.onclick = titleEditing;
 
     let newList = document.createElement('ul');
     newList.className = 'list';
@@ -79,7 +79,7 @@ let createBlock = function(clickEvent) {
     newBtn.onclick = createTask;
    
     newDay.append(newDayInner);
-    newDayInner.append(newDayDate);
+    newDayInner.append(newDayTitle);
     newDayInner.append(newList);
     newDayInner.append(newBtn);
 
@@ -92,46 +92,54 @@ let createBlock = function(clickEvent) {
 }
 
 addingBlockBtnPrepend.onclick = createBlock;
+addingBlockBtnAppend.onclick = createBlock;
 
 let titleEditingMenu = document.getElementsByClassName('title-editing-menu')[0];
 let titleEditingMenuCancelBtn = document.getElementsByClassName('title-editing-menu__button--cancel')[0];
 let titleEditingMenuOkBtn = document.getElementsByClassName('title-editing-menu__button--ok')[0];
 
 function titleEditing(clickEvent) {
-    let titleDiv = clickEvent.target.closest('.day__date');
+    let titleDiv = clickEvent.target.closest('.day__title');
     console.log(titleDiv)
 
     let titleWidth = parseInt(window.getComputedStyle(titleDiv).width);
     let titleHeight = parseInt(window.getComputedStyle(titleDiv).height);
     let titleText = titleDiv.textContent;
 
-    let inputArea = document.createElement('input');
-    inputArea.setAttribute('type', 'text');
-    inputArea.style.width = titleWidth;
-    inputArea.style.height = titleHeight;
-    inputArea.value = titleText;
+    let inputText = document.createElement('input');
+    inputText.setAttribute('type', 'text');
+    inputText.className = 'title-editing-input';
+    inputText.value = titleText;
 
     let titleEditingContainer = document.createElement('div');
     titleEditingContainer.className = 'title-editing-container';
 
     titleDiv.replaceWith(titleEditingContainer);
-    titleEditingContainer.append(inputArea);
+    titleEditingContainer.append(inputText);
     titleEditingContainer.append(titleEditingMenu);
     titleEditingMenu.style.display = 'block';
+    inputText.focus();
 
     titleEditingMenuCancelBtn.onclick = function() {
-        body.append(title.titleEditingMenu);
-        titleEditingMenu.style.display = 'none';
+        // document.getElementsByTagName('body')[0].append(titleEditingMenu);
+        // titleEditingMenu.style.display = 'none';
         titleEditingContainer.replaceWith(titleDiv);
     }
 
     titleEditingMenuOkBtn.onclick = function() {
-        titleDiv.textContent = inputArea.value;
+        if (inputText.value != '') titleDiv.textContent = inputText.value;
 
-        document.getElementsByTagName('body')[0].append(titleEditingMenu);
-        titleEditingMenu.style.display = 'none';
+        // document.getElementsByTagName('body')[0].append(titleEditingMenu);
+        // titleEditingMenu.style.display = 'none';
         titleEditingContainer.replaceWith(titleDiv);
     }
+
+    document.addEventListener('click', function(clickEvent) {
+        if (clickEvent.target.closest('.title-editing-container') || clickEvent.target == titleDiv) return;
+
+        if (inputText.value != '') titleDiv.textContent = inputText.value;
+        titleEditingContainer.replaceWith(titleDiv);
+    });
 
 
 
