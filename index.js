@@ -1,5 +1,7 @@
 "use strict"
 
+import createContextMenu from './modules/contextMenuModule.js';
+
 let amountOfLi = 0; //хорошо бы автоматизировать вычисление количества li
 let idCounterOfBlocks = (localStorage.getItem('idCounterOfBlocks')) ? localStorage.getItem('idCounterOfBlocks') : 0;
 let todoList = document.getElementsByClassName('todo-list')[0];
@@ -150,18 +152,36 @@ function titleEditing(clickEvent) {
 
 
 
-let contextMenu = document.getElementsByClassName('context-menu')[0];
-todoList.oncontextmenu = listItemRightClickHandler;
+todoList.addEventListener('contextmenu', listItemRightClickHandler);
+todoList.addEventListener('contextmenu', blockRightClickHandler);
 
 function listItemRightClickHandler(clickEvent) {
-    if(!clickEvent.target.closest('.list-item')) return false;
+    clickEvent.preventDefault();
+    if(!clickEvent.target.closest('.list-item')) return;
 
-    contextMenu.style.display = 'block';
-    contextMenu.style.top = clickEvent.clientY + 'px';
-    contextMenu.style.left = clickEvent.clientX + 'px';
+    // contextMenu.style.display = 'block';
+    // contextMenu.style.top = clickEvent.clientY + 'px';
+    // contextMenu.style.left = clickEvent.clientX + 'px';
 
-    let contextMenuEditButton = document.getElementsByClassName('context-menu__button--edit')[0];
-    contextMenuEditButton.onclick = function() {
+    // let contextMenuEditButton = document.getElementsByClassName('context-menu__button--edit')[0];
+    // contextMenuEditButton.onclick = function() {
+    //     new Promise( (resolve, reject) => {
+    //         let editedText = editTextOfItem(clickEvent.target.closest('.list-item').firstChild);
+    //         resolve(editedText);
+    //     })
+    //     .then( (editedText) => {
+    //         if (!editedText) {
+    //             clickEvent.target.closest('.list-item').remove();
+    //         }
+    //     })
+    // }
+
+    // let contextMenuRemoveButton =  document.getElementsByClassName('context-menu__button--remove')[0];
+    // contextMenuRemoveButton.onclick = function() {
+    //     clickEvent.target.closest('.list-item').remove();
+    // }
+
+    function editButtonHandler() {
         new Promise( (resolve, reject) => {
             let editedText = editTextOfItem(clickEvent.target.closest('.list-item').firstChild);
             resolve(editedText);
@@ -173,22 +193,68 @@ function listItemRightClickHandler(clickEvent) {
         })
     }
 
-    let contextMenuRemoveButton =  document.getElementsByClassName('context-menu__button--remove')[0];
-    contextMenuRemoveButton.onclick = function() {
+    function deleteButtonHandler() {
         clickEvent.target.closest('.list-item').remove();
     }
 
-    return false;
+    let contextMenu = createContextMenu([
+        {name: 'Редактировать', handler: editButtonHandler},
+        {name: 'Удалить', handler: deleteButtonHandler}
+    ])
+
+    let previousContextMenu = document.getElementsByClassName('context-menu')[0];
+    if (previousContextMenu) previousContextMenu.remove();
+
+    document.getElementsByTagName('body')[0].append(contextMenu);
+    contextMenu.style.position = 'absolute';
+    contextMenu.style.top = clickEvent.clientY + 'px';
+    contextMenu.style.left = clickEvent.clientX + 'px';
+
+    document.addEventListener('click', function(event) {
+        contextMenu.remove();
+    })
+    
+    document.addEventListener('contextmenu', function(event) {
+        if (event.target.closest('.list-item')) return;
+        contextMenu.remove();
+    })
 }
 
-document.addEventListener('click', function(event) {
-    contextMenu.style.display = 'none';
-})
+function blockRightClickHandler(clickEvent) {
+    clickEvent.preventDefault();
+    if (clickEvent.target.closest('.list-item') || !clickEvent.target.closest('.block__inner')) return;
 
-document.addEventListener('contextmenu', function(event) {
-    if (event.target.closest('.list-item')) return;
-    contextMenu.style.display = 'none';
-})
+    function deleteButtonHandler() {
+        clickEvent.target.closest('.block').remove();
+        recomposeBlocks();
+    }
+
+    // код повторяется с этого места...
+    let contextMenu = createContextMenu([
+        {name: 'Удалить', handler: deleteButtonHandler}
+    ])
+
+    let previousContextMenu = document.getElementsByClassName('context-menu')[0];
+    if (previousContextMenu) previousContextMenu.remove();
+
+    document.getElementsByTagName('body')[0].append(contextMenu);
+    contextMenu.style.position = 'absolute';
+    contextMenu.style.top = clickEvent.clientY + 'px';
+    contextMenu.style.left = clickEvent.clientX + 'px';
+
+    document.addEventListener('click', function(event) {
+        contextMenu.remove();
+    })
+    
+    document.addEventListener('contextmenu', function(event) {
+        if (event.target.closest('.block__inner')) return;
+        contextMenu.remove();
+    })
+    // ...до этого места
+
+
+
+}
 
 
 

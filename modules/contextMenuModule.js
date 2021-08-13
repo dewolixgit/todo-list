@@ -1,11 +1,20 @@
-function createContextMenu(buttonsArray) {
+export default function createContextMenu(buttonsArray) {
     console.log(buttonsArray);
-    let contextMenuContainer = 0;
+    let contextMenuContainer = document.createElement('div');
+    contextMenuContainer.className = 'context-menu';
 
-    for (let i = 0; i < buttonsArray.length; i++) {
+    for (let button of buttonsArray) {
 
+        let newBtn = document.createElement('button');
+        newBtn.className = 'context-menu__button';
+        newBtn.textContent = button.name;
 
+        newBtn.onclick = button.handler;
+
+        contextMenuContainer.append(newBtn);
 
 
     }
+
+    return contextMenuContainer;
 }
