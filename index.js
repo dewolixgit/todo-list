@@ -1,12 +1,11 @@
 "use strict"
 
-let amountOfLi = 1; //хорошо бы автоматизировать вычисление количества li
+let amountOfLi = 0; //хорошо бы автоматизировать вычисление количества li
+let idCounterOfBlocks = (localStorage.getItem('idCounterOfBlocks')) ? localStorage.getItem('idCounterOfBlocks') : 0;
 let todoList = document.getElementsByClassName('todo-list')[0];
 
-let addingTaskBtn = document.getElementsByClassName('day__add-task-btn')[0];
 let list = document.getElementsByClassName('list')[0];
 let modal = document.getElementsByClassName('modal')[0];
-addingTaskBtn.onclick = createTask;
 
 
 function createTask(clickEvent) {
@@ -39,7 +38,7 @@ function createTask(clickEvent) {
     .then( (editedText) => {
         if (editedText) {
         
-            clickEvent.target.closest('.day').getElementsByClassName('list')[0].append(newLi);
+            clickEvent.target.closest('.block').getElementsByClassName('list')[0].append(newLi);
             newLi.append(newText);
             newLi.append(newCheckbox);
             newCheckbox.append(newCheckboxInput);
@@ -52,42 +51,45 @@ function createTask(clickEvent) {
 }
 
 
-let dayContainer = document.getElementsByClassName('todo-list__day-container')[0];
+let blockContainer = document.getElementsByClassName('todo-list__block-container')[0];
 let addingBlockBtnPrepend = document.getElementsByClassName('todo-list__add-block-btn--upper')[0];
 let addingBlockBtnAppend = document.getElementsByClassName('todo-list__add-block-btn--down')[0];
 
 let createBlock = function(clickEvent) {
 
-    let newDay = document.createElement('div');
-    newDay.className = 'day';
+    let newBlock = document.createElement('div');
+    newBlock.className = 'block';
 
-    let newDayInner = document.createElement('div');
-    newDayInner.className = 'day__inner';
+    let newBlockInner = document.createElement('div');
+    newBlockInner.className = 'block__inner';
 
-    let newDayTitle = document.createElement('div');
-    newDayTitle.className = 'day__title';
-    newDayTitle.textContent = new Date;
-    newDayTitle.onclick = titleEditing;
+    let newBlockTitle = document.createElement('div');
+    newBlockTitle.className = 'block__title';
+    newBlockTitle.textContent = new Date;
+    newBlockTitle.onclick = titleEditing;
 
     let newList = document.createElement('ul');
     newList.className = 'list';
 
     let newBtn = document.createElement('button');
     newBtn.textContent = 'Добавить';
-    newBtn.className = 'day__add-task-btn';
+    newBtn.className = 'block__add-task-btn';
 
     newBtn.onclick = createTask;
    
-    newDay.append(newDayInner);
-    newDayInner.append(newDayTitle);
-    newDayInner.append(newList);
-    newDayInner.append(newBtn);
+    newBlock.append(newBlockInner);
+    newBlockInner.append(newBlockTitle);
+    newBlockInner.append(newList);
+    newBlockInner.append(newBtn);
 
-    if (clickEvent.target.closest('.todo-list__add-block-btn--upper')) dayContainer.prepend(newDay);
-    else if (clickEvent.target.closest('.todo-list__add-block-btn--down')) dayContainer.append(newDay);
+    newBlock.id = 'block-id-' + idCounterOfBlocks;
+    idCounterOfBlocks++;
+
+    if (clickEvent.target.closest('.todo-list__add-block-btn--upper')) blockContainer.prepend(newBlock);
+    else if (clickEvent.target.closest('.todo-list__add-block-btn--down')) blockContainer.append(newBlock);
     else console.log('err'); // как обработать ошибку
 
-    recomposeDays();
+    recomposeBlocks();
 
 }
 
@@ -99,7 +101,7 @@ let titleEditingMenuCancelBtn = document.getElementsByClassName('title-editing-m
 let titleEditingMenuOkBtn = document.getElementsByClassName('title-editing-menu__button--ok')[0];
 
 function titleEditing(clickEvent) {
-    let titleDiv = clickEvent.target.closest('.day__title');
+    let titleDiv = clickEvent.target.closest('.block__title');
     console.log(titleDiv)
 
     let titleWidth = parseInt(window.getComputedStyle(titleDiv).width);
@@ -258,13 +260,14 @@ async function editTextOfItem(textDiv) {
 //     days[i].classList.add('day--last');
 // }
 
-const maxDaysInRow = 4;
-let recomposeDays = function() {
-    let days = document.getElementsByClassName('day');
+const maxBlocksInRow = 4;
+let recomposeBlocks = function() {
+    let blocks = document.getElementsByClassName('block');
+    if (!blocks.length) return;
 
-    let day = document.getElementsByClassName('day')[0];
-    let dayWidth = parseInt(window.getComputedStyle(day).width);
-    console.log('dayw', dayWidth)
+    let block = document.getElementsByClassName('block')[0];
+    let blockWidth = parseInt(window.getComputedStyle(block).width);
+    console.log('dayw', blockWidth)
 
     let body = document.querySelector('body');
     let bodyMargins = parseInt(window.getComputedStyle(body).marginRight) + parseInt(window.getComputedStyle(body).marginLeft);
@@ -272,50 +275,50 @@ let recomposeDays = function() {
     let todoListPaddings = parseInt(window.getComputedStyle(todoList).paddingRight) + parseInt(window.getComputedStyle(todoList).paddingLeft);
     console.log('todo padd', todoListPaddings);
 
-    let lastDayInRowPadding = parseInt(window.getComputedStyle(day).paddingRight);
-    console.log(lastDayInRowPadding)
+    let lastBlockInRowPadding = parseInt(window.getComputedStyle(block).paddingRight);
+    console.log(lastBlockInRowPadding)
 
-    let windowWidth = document.documentElement.clientWidth - bodyMargins - todoListPaddings + lastDayInRowPadding;
+    let windowWidth = document.documentElement.clientWidth - bodyMargins - todoListPaddings + lastBlockInRowPadding;
     console.log('win wid', windowWidth);
-    let daysInRow = Math.trunc( windowWidth/dayWidth );
-    daysInRow = (daysInRow >= maxDaysInRow) ? maxDaysInRow : daysInRow;
-    console.log(daysInRow)
-    let daysInLastRow = days.length % daysInRow;
+    let blocksInRow = Math.trunc( windowWidth/blockWidth );
+    blocksInRow = (blocksInRow >= maxBlocksInRow) ? maxBlocksInRow : blocksInRow;
+    console.log(blocksInRow)
+    let blocksInLastRow = blocks.length % blocksInRow;
 
-    for (let i = 0; i < days.length; i++) {
+    for (let i = 0; i < blocks.length; i++) {
         // days[i].classList.remove('day--without-padding-top');
-        days[i].classList.remove('day--last-in-row');
-        days[i].classList.remove('day--in-column');
-        days[i].classList.remove('day--last-row');
+        blocks[i].classList.remove('block--last-in-row');
+        blocks[i].classList.remove('block--in-column');
+        blocks[i].classList.remove('block--last-row');
 
         // if (i < daysInRow) {
         //     days[i].classList.add('day--without-padding-top');
         // }
 
-        if (days.length - i <= daysInLastRow && daysInLastRow != 0) {
-            days[i].classList.add('day--last-row');
+        if (blocks.length - i <= blocksInLastRow && blocksInLastRow != 0) {
+            blocks[i].classList.add('block--last-row');
         }
 
-        if (daysInRow == 1) {
-            days[i].classList.add('day--in-column');
+        if (blocksInRow == 1) {
+            blocks[i].classList.add('block--in-column');
             continue;
         }
 
-        if ( (i + 1) % daysInRow == 0) {
-            days[i].classList.add('day--last-in-row');
+        if ( (i + 1) % blocksInRow == 0) {
+            blocks[i].classList.add('block--last-in-row');
         }
         
     }
 
-    if (daysInLastRow == 0) {
-        for (let i = days.length - 1; i >= days.length - daysInRow; i--) {
-            days[i].classList.add('day--last-row');
+    if (blocksInLastRow == 0) {
+        for (let i = blocks.length - 1; i >= blocks.length - blocksInRow; i--) {
+            blocks[i].classList.add('block--last-row');
         }
     }
 
     
 }
 
-window.addEventListener('resize', recomposeDays);
-window.addEventListener('load', recomposeDays);
+window.addEventListener('resize', recomposeBlocks);
+window.addEventListener('load', recomposeBlocks);
 
