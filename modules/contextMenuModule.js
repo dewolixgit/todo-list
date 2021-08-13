@@ -1,7 +1,7 @@
-export default function createContextMenu(buttonsArray) {
+export default function createAndShowContextMenu(clickEvent, elementClassName, buttonsArray) {
     console.log(buttonsArray);
-    let contextMenuContainer = document.createElement('div');
-    contextMenuContainer.className = 'context-menu';
+    let contextMenu = document.createElement('div');
+    contextMenu.className = 'context-menu';
 
     for (let button of buttonsArray) {
 
@@ -11,10 +11,27 @@ export default function createContextMenu(buttonsArray) {
 
         newBtn.onclick = button.handler;
 
-        contextMenuContainer.append(newBtn);
+        contextMenu.append(newBtn);
 
 
     }
 
-    return contextMenuContainer;
+    // return contextMenuContainer;
+
+    let previousContextMenu = document.getElementsByClassName('context-menu')[0];
+    if (previousContextMenu) previousContextMenu.remove();
+
+    document.getElementsByTagName('body')[0].append(contextMenu);
+    contextMenu.style.position = 'absolute';
+    contextMenu.style.top = clickEvent.clientY + 'px';
+    contextMenu.style.left = clickEvent.clientX + 'px';
+
+    document.addEventListener('click', function(event) {
+        contextMenu.remove();
+    })
+    
+    document.addEventListener('contextmenu', function(event) {
+        if (event.target.closest('.' + elementClassName)) return;
+        contextMenu.remove();
+    })
 }

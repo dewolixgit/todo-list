@@ -1,6 +1,6 @@
 "use strict"
 
-import createContextMenu from './modules/contextMenuModule.js';
+import createAndShowContextMenu from './modules/contextMenuModule.js';
 
 let amountOfLi = 0; //хорошо бы автоматизировать вычисление количества li
 let idCounterOfBlocks = (localStorage.getItem('idCounterOfBlocks')) ? localStorage.getItem('idCounterOfBlocks') : 0;
@@ -197,27 +197,32 @@ function listItemRightClickHandler(clickEvent) {
         clickEvent.target.closest('.list-item').remove();
     }
 
-    let contextMenu = createContextMenu([
+    createAndShowContextMenu(clickEvent, 'list-item', [
         {name: 'Редактировать', handler: editButtonHandler},
         {name: 'Удалить', handler: deleteButtonHandler}
-    ])
+    ]);
 
-    let previousContextMenu = document.getElementsByClassName('context-menu')[0];
-    if (previousContextMenu) previousContextMenu.remove();
+    // let contextMenu = createContextMenu([
+    //     {name: 'Редактировать', handler: editButtonHandler},
+    //     {name: 'Удалить', handler: deleteButtonHandler}
+    // ])
 
-    document.getElementsByTagName('body')[0].append(contextMenu);
-    contextMenu.style.position = 'absolute';
-    contextMenu.style.top = clickEvent.clientY + 'px';
-    contextMenu.style.left = clickEvent.clientX + 'px';
+    // let previousContextMenu = document.getElementsByClassName('context-menu')[0];
+    // if (previousContextMenu) previousContextMenu.remove();
 
-    document.addEventListener('click', function(event) {
-        contextMenu.remove();
-    })
+    // document.getElementsByTagName('body')[0].append(contextMenu);
+    // contextMenu.style.position = 'absolute';
+    // contextMenu.style.top = clickEvent.clientY + 'px';
+    // contextMenu.style.left = clickEvent.clientX + 'px';
+
+    // document.addEventListener('click', function(event) {
+    //     contextMenu.remove();
+    // })
     
-    document.addEventListener('contextmenu', function(event) {
-        if (event.target.closest('.list-item')) return;
-        contextMenu.remove();
-    })
+    // document.addEventListener('contextmenu', function(event) {
+    //     if (event.target.closest('.list-item')) return;
+    //     contextMenu.remove();
+    // })
 }
 
 function blockRightClickHandler(clickEvent) {
@@ -229,28 +234,32 @@ function blockRightClickHandler(clickEvent) {
         recomposeBlocks();
     }
 
-    // код повторяется с этого места...
-    let contextMenu = createContextMenu([
+    createAndShowContextMenu(clickEvent, 'block__inner', [
         {name: 'Удалить', handler: deleteButtonHandler}
-    ])
+    ]);
 
-    let previousContextMenu = document.getElementsByClassName('context-menu')[0];
-    if (previousContextMenu) previousContextMenu.remove();
+    // // код повторяется с этого места...
+    // let contextMenu = createContextMenu([
+    //     {name: 'Удалить', handler: deleteButtonHandler}
+    // ])
 
-    document.getElementsByTagName('body')[0].append(contextMenu);
-    contextMenu.style.position = 'absolute';
-    contextMenu.style.top = clickEvent.clientY + 'px';
-    contextMenu.style.left = clickEvent.clientX + 'px';
+    // let previousContextMenu = document.getElementsByClassName('context-menu')[0];
+    // if (previousContextMenu) previousContextMenu.remove();
 
-    document.addEventListener('click', function(event) {
-        contextMenu.remove();
-    })
+    // document.getElementsByTagName('body')[0].append(contextMenu);
+    // contextMenu.style.position = 'absolute';
+    // contextMenu.style.top = clickEvent.clientY + 'px';
+    // contextMenu.style.left = clickEvent.clientX + 'px';
+
+    // document.addEventListener('click', function(event) {
+    //     contextMenu.remove();
+    // })
     
-    document.addEventListener('contextmenu', function(event) {
-        if (event.target.closest('.block__inner')) return;
-        contextMenu.remove();
-    })
-    // ...до этого места
+    // document.addEventListener('contextmenu', function(event) {
+    //     if (event.target.closest('.block__inner')) return;
+    //     contextMenu.remove();
+    // })
+    // // ...до этого места
 
 
 
